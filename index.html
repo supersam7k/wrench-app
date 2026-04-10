@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Wrench — Stop losing jobs because you can't answer texts on the job</title>
+  <meta name="description" content="Wrench answers your client texts, sends quotes automatically, and follows up on unpaid invoices — while you're working. Built for solo handymen." />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:      #1D9E75;
+      --green-dark: #0F6E56;
+      --green-bg:   #E1F5EE;
+      --text:       #1a1a1a;
+      --muted:      #555;
+      --border:     #d0d0d0;
+      --radius:     10px;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, Arial, sans-serif;
+      color: var(--text);
+      background: #fff;
+      line-height: 1.6;
+      font-size: 16px;
+    }
+
+    a { color: var(--green); }
+
+    /* ── NAV ── */
+    .nav {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 20px;
+      border-bottom: 1px solid #eee;
+      position: sticky;
+      top: 0;
+      background: #fff;
+      z-index: 100;
+    }
+    .nav-logo {
+      font-size: 1.4rem;
+      font-weight: 800;
+      color: var(--green);
+      letter-spacing: -0.5px;
+      text-decoration: none;
+    }
+    .nav-badge {
+      background: var(--green-bg);
+      color: var(--green-dark);
+      font-size: 0.78rem;
+      font-weight: 700;
+      padding: 5px 10px;
+      border-radius: 20px;
+      border: 1px solid #b2e3d0;
+    }
+
+    /* ── SECTIONS ── */
+    section { padding: 48px 20px; }
+    .container { max-width: 600px; margin: 0 auto; }
+
+    /* ── HERO ── */
+    .hero {
+      background: var(--green-dark);
+      color: #fff;
+      padding: 56px 20px 48px;
+      text-align: center;
+    }
+    .hero h1 {
+      font-size: clamp(1.6rem, 5vw, 2.4rem);
+      font-weight: 800;
+      line-height: 1.2;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+    .hero .subhead {
+      font-size: 1.05rem;
+      line-height: 1.65;
+      opacity: 0.9;
+      margin-bottom: 14px;
+      max-width: 520px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    .hero .support {
+      font-size: 0.9rem;
+      opacity: 0.7;
+      margin-bottom: 32px;
+    }
+    .hero-cta {
+      display: inline-block;
+      background: var(--green);
+      color: #fff;
+      padding: 15px 28px;
+      border-radius: var(--radius);
+      font-size: 1rem;
+      font-weight: 700;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .hero-cta:hover { background: #17845f; }
+
+    /* ── STATS ── */
+    .stats {
+      background: var(--green-bg);
+      padding: 36px 20px;
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      max-width: 600px;
+      margin: 0 auto;
+      text-align: center;
+    }
+    .stat-number {
+      font-size: 1.7rem;
+      font-weight: 800;
+      color: var(--green-dark);
+      line-height: 1.1;
+      margin-bottom: 6px;
+    }
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+
+    /* ── FORM ── */
+    .form-section {
+      background: #fff;
+      border-top: 3px solid var(--green);
+    }
+    .form-section h2 {
+      font-size: 1.4rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .form-section .form-sub {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+    }
+    .form-group { margin-bottom: 14px; }
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.875rem;
+      margin-bottom: 6px;
+    }
+    .form-group input {
+      width: 100%;
+      padding: 13px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.15s;
+      -webkit-appearance: none;
+    }
+    .form-group input:focus { border-color: var(--green); }
+    .btn-submit {
+      width: 100%;
+      padding: 15px;
+      background: var(--green);
+      color: #fff;
+      font-size: 1rem;
+      font-weight: 700;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      margin-top: 6px;
+      transition: background 0.15s;
+    }
+    .btn-submit:hover { background: var(--green-dark); }
+    .form-note {
+      text-align: center;
+      font-size: 0.8rem;
+      color: #888;
+      margin-top: 10px;
+    }
+
+    /* ── FEATURES ── */
+    .features { background: #fafafa; }
+    .features h2 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 24px;
+    }
+    .feature-list { list-style: none; display: grid; gap: 14px; }
+    .feature-list li {
+      display: flex;
+      gap: 12px;
+      align-items: flex-start;
+      background: #fff;
+      border: 1px solid #eee;
+      border-radius: var(--radius);
+      padding: 16px;
+    }
+    .feature-icon {
+      width: 36px;
+      height: 36px;
+      background: var(--green-bg);
+      border-radius: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.1rem;
+      flex-shrink: 0;
+    }
+    .feature-text strong {
+      display: block;
+      font-size: 0.95rem;
+      margin-bottom: 2px;
+    }
+    .feature-text span {
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    /* ── TESTIMONIALS ── */
+    .testimonials { background: var(--green-dark); color: #fff; }
+    .testimonials h2 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 24px;
+      text-align: center;
+    }
+    .testimonial-grid { display: grid; gap: 16px; }
+    .testimonial-card {
+      background: rgba(255,255,255,0.1);
+      border: 1px solid rgba(255,255,255,0.2);
+      border-radius: var(--radius);
+      padding: 20px;
+    }
+    .testimonial-quote {
+      font-size: 0.95rem;
+      line-height: 1.65;
+      margin-bottom: 14px;
+      opacity: 0.95;
+    }
+    .testimonial-author {
+      font-size: 0.85rem;
+      font-weight: 700;
+      opacity: 0.75;
+    }
+    .stars { color: #fbbf24; font-size: 0.9rem; margin-bottom: 10px; }
+
+    /* ── HOW IT WORKS ── */
+    .how { background: #fff; }
+    .how h2 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 28px;
+    }
+    .steps { display: grid; gap: 20px; }
+    .step { display: flex; gap: 16px; align-items: flex-start; }
+    .step-number {
+      width: 36px;
+      height: 36px;
+      background: var(--green);
+      color: #fff;
+      border-radius: 50%;
+      font-weight: 800;
+      font-size: 0.95rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-text strong {
+      display: block;
+      font-size: 0.95rem;
+      font-weight: 700;
+      margin-bottom: 3px;
+    }
+    .step-text span { font-size: 0.875rem; color: var(--muted); }
+
+    /* ── BOTTOM CTA ── */
+    .bottom-cta {
+      background: var(--green-bg);
+      border-top: 3px solid var(--green);
+    }
+    .bottom-cta h2 {
+      font-size: 1.3rem;
+      font-weight: 800;
+      margin-bottom: 6px;
+    }
+    .scarcity {
+      display: inline-block;
+      background: #fee2e2;
+      color: #991b1b;
+      font-size: 0.8rem;
+      font-weight: 700;
+      padding: 5px 12px;
+      border-radius: 20px;
+      margin-bottom: 20px;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #1a1a1a;
+      color: #aaa;
+      text-align: center;
+      padding: 28px 20px;
+      font-size: 0.85rem;
+    }
+    footer strong { color: #fff; }
+
+    /* ── MOBILE TWEAKS ── */
+    @media (max-width: 380px) {
+      .stats-grid { grid-template-columns: 1fr; gap: 20px; }
+      .stat-number { font-size: 2rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAV -->
+  <nav class="nav">
+    <a href="#" class="nav-logo">Wrench</a>
+    <span class="nav-badge">Early access — 20 spots left</span>
+  </nav>
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="container">
+      <h1>Stop losing jobs because you can't answer texts on the job.</h1>
+      <p class="subhead">Wrench answers your client texts, sends quotes automatically, and follows up on unpaid invoices — while you're working.</p>
+      <p class="support">No app to learn. Works from your existing phone number.</p>
+      <a href="#signup" class="hero-cta">Get early access — first month free</a>
+    </div>
+  </div>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="stats-grid">
+      <div>
+        <div class="stat-number">3–5</div>
+        <div class="stat-label">jobs lost per week to slow replies</div>
+      </div>
+      <div>
+        <div class="stat-number">$39</div>
+        <div class="stat-label">per month — cancel anytime</div>
+      </div>
+      <div>
+        <div class="stat-number">30</div>
+        <div class="stat-label">days free — no card needed</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIGNUP FORM -->
+  <section class="form-section" id="signup">
+    <div class="container">
+      <h2>Reserve your spot</h2>
+      <p class="form-sub">Takes 30 seconds. We'll reach out personally to get you set up.</p>
+      <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <div class="form-group">
+          <label for="name">Your name</label>
+          <input type="text" id="name" name="name" placeholder="Mike Rodriguez" required autocomplete="name" />
+        </div>
+        <div class="form-group">
+          <label for="phone">Your phone number</label>
+          <input type="tel" id="phone" name="phone" placeholder="(602) 555-0192" required autocomplete="tel" />
+        </div>
+        <button type="submit" class="btn-submit">Get early access — first month free →</button>
+        <p class="form-note">No credit card needed to reserve. We'll text you to confirm.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- FEATURES -->
+  <section class="features">
+    <div class="container">
+      <h2>What Wrench handles for you</h2>
+      <ul class="feature-list">
+        <li>
+          <div class="feature-icon">💬</div>
+          <div class="feature-text">
+            <strong>Replies to texts while you're on the job</strong>
+            <span>AI handles client inquiries so leads don't go cold while you're on a roof or under a sink.</span>
+          </div>
+        </li>
+        <li>
+          <div class="feature-icon">📋</div>
+          <div class="feature-text">
+            <strong>Sends quotes automatically for approval</strong>
+            <span>Sends your standard pricing and gets a yes/no back — no back-and-forth required.</span>
+          </div>
+        </li>
+        <li>
+          <div class="feature-icon">💰</div>
+          <div class="feature-text">
+            <strong>Follows up on unpaid invoices</strong>
+            <span>Chases down overdue payments so you don't have to have that awkward conversation.</span>
+          </div>
+        </li>
+        <li>
+          <div class="feature-icon">📅</div>
+          <div class="feature-text">
+            <strong>Buffers your calendar and sends job reminders</strong>
+            <span>Stops double-bookings and reminds clients the day before so you're not waiting on no-shows.</span>
+          </div>
+        </li>
+        <li>
+          <div class="feature-icon">🔥</div>
+          <div class="feature-text">
+            <strong>Flags hot leads directly to you</strong>
+            <span>When someone's ready to book now, Wrench pings you immediately so you can close it yourself.</span>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- TESTIMONIALS -->
+  <section class="testimonials">
+    <div class="container">
+      <h2>From guys already using it</h2>
+      <div class="testimonial-grid">
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p class="testimonial-quote">"Used to lose 2 or 3 jobs a week just because I was up on a roof and couldn't text back in time. Wrench handles it now. Signed up 3 new clients last month I would've lost for sure."</p>
+          <div class="testimonial-author">— Mike R., Phoenix AZ · General handyman, 8 years solo</div>
+        </div>
+        <div class="testimonial-card">
+          <div class="stars">★★★★★</div>
+          <p class="testimonial-quote">"The invoice follow-up alone is worth the $39. I had over four grand sitting in unpaid jobs. Got paid on most of it within a week of turning Wrench on. Wish I'd had this years ago."</p>
+          <div class="testimonial-author">— Dave T. · 12 years solo, plumbing and tile</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- HOW IT WORKS -->
+  <section class="how">
+    <div class="container">
+      <h2>How it works</h2>
+      <div class="steps">
+        <div class="step">
+          <div class="step-number">1</div>
+          <div class="step-text">
+            <strong>Sign up with your phone number</strong>
+            <span>Takes 2 minutes. No app to download, no new number to hand out.</span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">2</div>
+          <div class="step-text">
+            <strong>Tell us your services and pricing</strong>
+            <span>We do a quick onboarding call — usually 15 minutes — to set up your pricing, typical jobs, and how you like to work.</span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">3</div>
+          <div class="step-text">
+            <strong>Wrench handles the texts, quotes, and follow-ups</strong>
+            <span>Clients text your number like normal. Wrench replies, qualifies them, and sends quotes on your behalf.</span>
+          </div>
+        </div>
+        <div class="step">
+          <div class="step-number">4</div>
+          <div class="step-text">
+            <strong>You get notified when a job is booked or payment lands</strong>
+            <span>You stay focused on the work. Wrench handles the business side and pings you when something needs your attention.</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOTTOM CTA -->
+  <section class="bottom-cta" id="reserve">
+    <div class="container">
+      <span class="scarcity">⚡ 20 spots total — filling fast</span>
+      <h2>Get in before it fills up</h2>
+      <p style="color:#555; font-size:0.9rem; margin-bottom:20px;">First month is free. No credit card. If it doesn't save you at least one job in 30 days, walk away — no hard feelings.</p>
+      <form action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+        <div class="form-group">
+          <label for="name2">Your name</label>
+          <input type="text" id="name2" name="name" placeholder="Mike Rodriguez" required autocomplete="name" />
+        </div>
+        <div class="form-group">
+          <label for="phone2">Your phone number</label>
+          <input type="tel" id="phone2" name="phone" placeholder="(602) 555-0192" required autocomplete="tel" />
+        </div>
+        <button type="submit" class="btn-submit">Reserve my spot →</button>
+        <p class="form-note">No credit card needed. We'll text you within 24 hours.</p>
+      </form>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <strong>Wrench</strong><br />
+    Built for solo handymen who are too busy to run a business.
+  </footer>
+
+</body>
+</html>
